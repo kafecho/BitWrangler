@@ -38,3 +38,7 @@ The Scala compiler will use the Macro and translate the calls to:
 Which is similar to what you could write by hand.
 
 I also provide a non-macro version of the BitWrangler and some unit tests and some micro benchmarks.
+
+Many thanks to https://github.com/scalamacros/maven-example for helping me quickstart my Maven project.
+
+Many thanks for http://stackoverflow.com/questions/11055210/whats-the-easiest-way-to-use-reify-get-an-ast-of-an-expression-in-scala for some useful tips on how to create and combine ASTs.
