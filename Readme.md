@@ -1,4 +1,5 @@
-## BitWrangler
+BitWrangler
+============
 
 BitWrangler is my 1st attempt at writing a macro from Scala 2.10.
 
@@ -18,23 +19,25 @@ The 2 Scala macros have written basically create ASTs for those bit-level proces
 
 Here is a simple example 
 
-import akka.util.ByteString
-import org.kafecho.bitwrangler.macros.BitWrangler._
-object SimpleExample extends App {
-	
-    // AKA 00000111
-	val data = ByteString(0x07)
+> import akka.util.ByteString
+> import org.kafecho.bitwrangler.macros.BitWrangler._
+> object SimpleExample extends App {
+>    // AKA 00000111
+>	val data = ByteString(0x07)
+>
+>	// Read the bit at position 7 (this should be one)
+>	println (boolean(data,7))
+>
+>	// Read 2 bits starting from position 5 (this should be 3)
+>	println (int(data,5,2))
+> }
 
+The Scala compiler will use the Macro and translate the calls to:
 
-	// Read the bit at position 7 (this should be one)
-	println (boolean(data,7))
+SimpleExample.this.data.apply(0).$amp(1).$bang$eq(0) <=> (data(0) & 0x01) != 0
 
-	// Read 2 bits starting from position 5 (this should be 3)
-	println (int(data,5,2))
+SimpleExample.this.data.apply(0).$greater$greater(1).$amp(3) (data(0) >> 1) & (0x03)
 
-	// Read 3 bits starting from position 5 (this should be 3)
-	println (int(data,5,3))
+Which is similar to what you could write by hand.
 
-}
-
-
+I also provide a non-macro version of the BitWrangler and some unit tests and some micro benchmarks.
