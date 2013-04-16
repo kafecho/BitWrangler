@@ -69,7 +69,11 @@ object BitWrangler {
   private[this] def intValue(c: Context)(tree: c.Tree, offset: Int, nbBits: Int) = {
     import c.universe._
     implicit val cc: c.type = c
-    val shifted = Apply(Select(tree, op(">>")), const(8 - offset - nbBits))
+    val shiftBy = 8 - offset - nbBits
+    val shifted = shiftBy match{
+      case 0 => tree
+      case v => Apply(Select(tree, op(">>")), const(v))
+    }
     Apply(Select(shifted, op("&")), const(lengthMasks(nbBits)))
   }
 
@@ -77,7 +81,6 @@ object BitWrangler {
   def booleanImpl(c: Context)(bytes: c.Expr[ByteString], offset: c.Expr[Int]): c.Expr[Boolean] = {
     import c.universe._
     implicit val cc: c.type = c
-
     val Literal(Constant(o: Int)) = offset.tree
     val what = nthElement(c)(bytes.tree, o / 8)
     val masked = Apply(Select(what, op("&")), const(bitMasks(o % 8)))
